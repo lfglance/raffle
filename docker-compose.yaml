@@ -1,0 +1,13 @@
+version: '3'
+services:
+  db:
+    image: postgres:9.6.15-alpine
+    container_name: raffler_db
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER:-raffler}
+      POSTGRES_DB: ${DB_NAME:-raffler}
+    volumes:
+      - ${DATA_DIR:-./data/postgresql}:/var/lib/postgresql/data

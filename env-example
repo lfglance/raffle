@@ -1,0 +1,13 @@
+DB_PASS=__youmakethisup__
+DB_USER=raffler
+DB_NAME=raffler
+DB_HOST=localhost
+
+SITE_NAME=Raffler
+SECRET_KEY=__youmakethisup__
+SERVER_NAME=127.0.0.1:5000
+ADMIN_EMAIL=__you@yourdomain.com__
+
+GOOGLE_CLIENT_ID=__getthisfromgoogledeveloperspage__
+GOOGLE_CLIENT_SECRET=__getthisfromgoogledeveloperspage__
+OAUTHLIB_INSECURE_TRANSPORT=0

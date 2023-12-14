@@ -1,0 +1,94 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Raffle Time!{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li class="mt-1"><a href="/">Home</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Active Raffle</a></li>
+        </ul>
+    </nav>
+    <section class="hero is-centered is-small">
+        <div class="hero-body">
+        <p class="title">
+            Raffle Time!
+        </p>
+        <p class="subtitle">
+            Selecting the winner of the {{ prize.prize.name }}
+        </p>
+        <div class="columns">
+            <div class="column is-3">    
+                <article class="message">
+                    <div class="message-header">
+                    <p><a href="{{ url_for('raffle.show_prize', id=prize.prize.id) }}">#{{ prize.prize.id }} - {{ prize.prize.name }}</a></p>
+                    </div>
+                    <div class="message-body">
+                        <img src="{{ prize.prize.image_url }}" style="max-width:80px;max-height:80px;">
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+    <section class="hero is-small">
+        <div class="hero-body">
+            <p class="title">and the winner of the <i>{{ prize.prize.name }}</i> is...</p>
+            <p class="title">
+                Raffle Entry #{{ prize.selected_entry.id }}
+            </p>
+            <p class="subtitle">
+                <strong>Entry UUID:</strong> {{ prize.selected_entry.uuid }}
+                <br>
+                <strong>First 4:</strong> {{ prize.selected_entry.uuid[0:4] }}
+                <br>
+                <strong>Middle 4:</strong> {{ prize.selected_entry.uuid[14:18] }}
+                <br>
+                <strong>Last 4:</strong> {{ prize.selected_entry.uuid[-4:] }}
+            </p>
+            {% if current_user.is_authenticated %}
+            <a class="button is-warning is-large js-modal-trigger mb-4" data-target="modal-reroll-confirm">
+                <i class="fa-solid fa-dice mr-2"></i>
+                Reselect
+            </a>
+            <a class="button is-success is-large js-modal-trigger mb-4" data-target="modal-winner-confirm">
+                <i class="fa-solid fa-thumbs-up mr-2"></i>
+                Confirm Winner
+            </a>
+            {% endif %}
+        </div>
+    </section>
+
+    <div id="modal-reroll-confirm" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <p class="title">Reselecting Winner!</p>
+            <p class="subtitle">Are you sure you want to select another entry?</p>
+            <p class="subtitle">You will not be able to go back to this one.</p>
+            <a href="" class="button is-light mr-4">Cancel</a>
+            <a href="{{ url_for('raffle.reselect') }}" class="button is-warning">
+                <i class="fa-solid fa-dice mr-2"></i>
+                Reselect
+            </a>
+          </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    <div id="modal-winner-confirm" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <p class="title">Confirming Winner</p>
+            <p class="subtitle">Are you sure you want to select this entry? Are they present and the complete random ID matches?</p>
+            <p class="subtitle">You will not be able to go back.</p>
+            <a href="" class="button is-light mr-4">Cancel</a>
+            <a href="{{ url_for('raffle.confirm') }}" class="button is-success">
+                <i class="fa-solid fa-thumbs-up mr-2"></i>
+                Confirm
+            </a>
+          </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+{% endblock %}

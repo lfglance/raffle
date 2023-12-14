@@ -1,0 +1,84 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Manage Prizes{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li class="mt-1"><a href="/">Home</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Manage Prizes</a></li>
+        </ul>
+    </nav>
+    <section class="hero is-centered is-small">
+        <div class="hero-body">
+        <p class="title">
+            Manage Prizes
+        </p>
+        {% if not prizes  %}
+            <p class="ml-3">No prizes added yet. Add them below.</p>
+        {% endif %}
+        {% for _prize in prizes | batch(4) %}
+            <div class="columns">
+            {% for prize in _prize %}
+                <div class="column is-3">    
+                    <article class="message">
+                        <div class="message-header">
+                        <p><a href="{{ url_for('raffle.show_prize', id=prize.id) }}">#{{ prize.id }} - {{ prize.name }}</a></p>
+                        </div>
+                        <div class="message-body">
+                            <img src="{{ prize.image_url }}" style="max-width:80px;max-height:80px;">
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+    <section class="hero is-small">
+        <div class="hero-body">
+            <p class="title">Add a Prize</p>
+            <form action="" method="post">
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                    <input class="input" name="name" type="text" placeholder="Nintendo Switch, Electric Scooter, etc">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Image URL</label>
+                    <div class="control">
+                    <input class="input" name="image_url" type="text" placeholder="Link to product image">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                    <textarea class="textarea" name="description" placeholder="Put the product description/details, manufacturer, model number, etc."></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Ship to Winner</label>
+                    <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="ship" value="yes">
+                        Yes
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="ship" value="no">
+                        No
+                    </label>
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                    <button class="button is-link">Submit</button>
+                    </div>
+                    <div class="control">
+                    <a href="" class="button is-link is-light">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

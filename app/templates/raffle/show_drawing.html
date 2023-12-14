@@ -1,0 +1,131 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Drawing #{{ drawing.id }}{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li class="mt-1"><a href="/">Home</a></li>
+            <li><a href="{{ url_for('raffle.manage_drawings') }}">Manage Drawings</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Drawing #{{ drawing.id }} - {{ drawing.name }}</a></li>
+        </ul>
+    </nav>
+    <section class="hero is-small">
+        <div class="hero-body">
+            <!-- <p class="title">Drawing #{{ drawing.id }} - {{ drawing.name }}</p> -->
+
+            <!-- Start Raffle -->
+            <a class="button is-success is-large js-modal-trigger mb-4" data-target="modal-start-raffle-confirm">
+                <i class="fa-solid fa-play mr-2"></i>
+                START RAFFLE!
+            </a>
+
+            <!-- Manage Drawing Prizes -->
+            <p class="mt-4 title"><strong>Manage Prizes</strong></p>
+            <div class="columns">
+                {% for prize in all_prizes %}
+                    <div class="column is-2">
+                        <a class="button" href="{{ url_for('raffle.show_drawing', id=drawing.id, add=prize.id) }}">
+                            <i class="fa-solid fa-circle-plus mr-2"></i> Add {{ prize.name }}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if drawing_prizes.count() == 0  %}
+                <p class="ml-3">No prizes selected yet for this drawing. Add them with the buttons above.</p>
+            {% endif %}
+            {% for _prize in drawing_prizes | batch(4) %}
+                <div class="columns">
+                {% for prize in _prize %}
+                    <div class="column is-3">    
+                        <article class="message">
+                            <div class="message-header">
+                            <p><a href="{{ url_for('raffle.show_prize', id=prize.prize_id) }}">#{{ prize.prize_id }} - {{ prize.prize.name }}</a></p>
+                            <a class="delete js-modal-trigger" aria-label="delete" data-target="modal-remove-prize-{{ prize.prize.id }}-confirm"></a>
+                            </div>
+                            <div class="message-body">
+                                <img src="{{ prize.prize.image_url }}" style="max-width:80px;max-height:80px;">
+                            </div>
+                        </article>
+                    </div>
+                    <div id="modal-remove-prize-{{ prize.prize.id }}-confirm" class="modal">
+                        <div class="modal-background"></div>
+                        <div class="modal-content">
+                          <div class="box">
+                            <p class="title">Removing Prize #{{ prize.prize.id }}</p>
+                            <p class="subtitle">Confirm that you want to remove prize #{{ prize.prize.id }} (rev {{ prize.id }}) from drawing #{{ prize.drawing.id }} - {{ prize.drawing.name }}?</p>
+                            <p class="subtitle"></p>
+                            <a href="" class="button is-light">Cancel</a>
+                            <a href="?remove={{ prize.id }}" class="button is-danger">
+                                <i class="fa-regular fa-trash-can mr-2"></i>
+                                Delete
+                            </a>
+                          </div>
+                        </div>
+                        <button class="modal-close is-large" aria-label="close"></button>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endfor %}
+
+            <!-- Edit Drawing -->
+            <p class="title">Edit Drawing</p>
+            <form action="" method="post">
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                    <input class="input" name="name" type="text" value="{{ drawing.name }}">
+                    </div>
+                </div>
+                <div class="field is-grouped mt-4">
+                    <div class="control">
+                        <a href="" class="button is-link is-light">Cancel</a>
+                    </div>
+                    <div class="control">
+                        <button class="button is-link">
+                            <i class="fa-regular fa-pen-to-square mr-2"></i>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="mt-4 pt-4">
+                <a class="button is-danger js-modal-trigger" data-target="modal-delete-confirm">
+                    <i class="fa-regular fa-trash-can mr-2"></i>
+                    Delete
+                </a>
+            </div>
+        </div>
+    </section>
+    <div id="modal-delete-confirm" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <p class="title">Confirm Deletion</p>
+            <p class="subtitle">Delete drawing #{{ drawing.id }} - <strong>{{ drawing.name }}</strong>?</p>
+            <a href="" class="button is-light mr-2">Cancel</a>
+            <a href="{{ url_for('raffle.delete_drawing', id=drawing.id) }}" class="button is-danger">
+                <i class="fa-regular fa-trash-can mr-2"></i>
+                Delete
+            </a>
+          </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    <div id="modal-start-raffle-confirm" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <p class="title">Starting Raffle!</p>
+            <p class="subtitle">Are you sure you are ready to start the raffle for {{ drawing.name }}?</p>
+            <p class="subtitle">You will not be able to change the prizes associated.</p>
+            <a href="" class="button is-light mr-4">Cancel</a>
+            <a href="{{ url_for('raffle.start_drawing', id=drawing.id) }}" class="button is-success">
+                <i class="fa-solid fa-play mr-2"></i>
+                Start!
+            </a>
+          </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+{% endblock %}

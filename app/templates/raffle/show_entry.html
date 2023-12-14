@@ -1,0 +1,25 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Raffle Entry #{{ entry.id }}{% endblock %}
+
+{% block content %}
+    <section class="hero is-centered">
+        <div class="hero-body">
+        <p class="title">
+            Raffle Entry #{{ entry.id }}
+        </p>
+        <p class="subtitle">
+            <strong>Entry UUID:</strong> {{ entry.uuid }}
+            <br>
+            <strong>First 4:</strong> {{ entry.uuid[0:4] }}
+            <br>
+            <strong>Middle 4:</strong> {{ entry.uuid[14:18] }}
+            <br>
+            <strong>Last 4:</strong> {{ entry.uuid[-4:] }}
+            <br>
+            <strong>Date Created:</strong><time datetime="{{ entry.create_date }}"> {{ entry.create_date }} UTC</time>
+        </p>
+        <p>Take a screenshot of this page on your phone to save your raffle details!</p>
+        </div>
+    </section>
+{% endblock %}

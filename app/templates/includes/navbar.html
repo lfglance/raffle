@@ -1,0 +1,89 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="/static/img/Mission_Loop.png" height="150">
+        <h1 style="padding-left: .25em" class="title">{{ config.SITE_NAME }}</h1>
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">
+            Home
+            </a>
+            <a class="navbar-item" href="https://missioncloud.com" target="_blank">
+            Mission
+            </a>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-warning hidden" id="raffleActive" href="{{ url_for('raffle.now') }}"><i class="fa-solid fa-dice mr-2"></i> Raffling Now!</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="/logout" class="button"><img src="{{ current_user.profile_pic }}" alt="{{ current_user.email }} Google profile pic"> Log out ({{ current_user.name }})</a>
+                    {% else %}
+                        <a class="button is-primary" href="{{ url_for('auth.login') }}">Log in</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <nav class="level notif">
+        <div class="level-item has-text-centered">
+            {% for category, message in messages %}
+                <article class="message {{ category }}">
+                    <div class="message-body">
+                        {{ message }}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </nav>
+{% endif %}
+{% endwith %}
+
+<style>
+    .notif {
+        position: fixed;
+        margin: 0 auto;
+        width: 100%;
+        z-index: 1;
+        padding-top: 1em;
+    }
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    (document.querySelectorAll('.notif') || []).forEach(($notif) => {
+        setTimeout(function() {
+            console.log('deleting element ' + $notif);
+            $notif.remove();
+        }, 3000)
+    });
+
+    async function checkRaffle() {
+        await fetch(`/raffle/check`)
+            .then((resp) => resp.json())
+            .then(function(data) {
+                if (data['active']) {
+                    document.getElementById('raffleActive').classList.remove('hidden')
+                }
+            });
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        checkRaffle();
+        setInterval(checkRaffle, 5000);
+    });
+</script>

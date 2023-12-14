@@ -1,0 +1,56 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Manage Drawings{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li class="mt-1"><a href="/">Home</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Manage Drawings</a></li>
+        </ul>
+    </nav>
+    <section class="hero is-centered is-small">
+        <div class="hero-body">
+        <p class="title">
+            Manage Drawings
+        </p>
+        <p class="subtitle">
+            {% if not drawings %}
+                <p>No drawings entered yet. Add one below!</p>
+            {% endif %}
+            <ul>
+                {% for drawing in drawings %}
+                    <li class="subtitle">
+                        {% if drawing.has_concluded %}
+                            <s>#{{ drawing.id }} - {{ drawing.name }}</s>
+                        {% else %}
+                            <a href="{{ url_for('raffle.show_drawing', id=drawing.id) }}">#{{ drawing.id }} - {{ drawing.name }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </p>
+        </div>
+    </section>
+    <section class="hero is-small">
+        <div class="hero-body">
+            <p class="title">Add a Drawing</p>
+            <form action="" method="post">
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                    <input class="input" name="name" type="text" placeholder="Monday afternoon drawing - Day 1">
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                    <button class="button is-link">Submit</button>
+                    </div>
+                    <div class="control">
+                    <a href="" class="button is-link is-light">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

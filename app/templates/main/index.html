@@ -1,0 +1,41 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+    <div style="margin: 2em;"></div>
+    <div class="tile is-ancestor text-center columns is-centered">
+        <div class="tile is-vertical is-8">
+            <h1 class="title is-centered">Hi {{ current_user.name }}!</h1>
+            <div class="tile">
+                <div class="tile is-parent is-vertical">
+                    <article class="tile is-child notification is-success">
+                        <p class="title">Enter</p>
+                        <p class="subtitle">Get a ticket to win a prize!</p>
+                        <a class="button" href="{{ url_for('raffle.enter_raffle') }}">Enter Raffle</a>
+                    </article>
+                    <article class="tile is-child notification is-danger">
+                        <p class="title">Manage</p>
+                        <p class="subtitle">Manage prize and drawing details.</p>
+                        <a class="button" href="{{ url_for('raffle.manage_prizes') }}">Prizes</a>
+                        <a class="button" href="{{ url_for('raffle.manage_drawings') }}">Drawings</a>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">Stats</p>
+                        <p class="subtitle"></p>
+                        <p>{{ entries or 0 }} entries.</p>
+                        <p>{{ prizes or 0 }} prizes.</p>
+                        <p>{{ drawings or 0 }} drawings.</p>
+                        <p>{{ winners or 0 }} winners.</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <p>You must login to interact.</p>
+    {% endif %}
+{% endblock %}
